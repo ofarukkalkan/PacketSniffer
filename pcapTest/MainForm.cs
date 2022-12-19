@@ -79,8 +79,8 @@ namespace pcapTest
       // Extract a device from the list
       wifi_device = interfaceList[selectedIntIndex];
 
-			client1 = new AsynchronousClient(27205, char1_login, char1_selection, true);
-			client2 = new AsynchronousClient(27205, char2_login, char2_selection, false);
+			client1 = new AsynchronousClient(27205, char1_login, char1_selection, true, charsClient1List);
+			client2 = new AsynchronousClient(27205, char2_login, char2_selection, false, charsClient1List);
 		}
 
     private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -343,7 +343,12 @@ namespace pcapTest
 
 		private void enterGameClient1Btn_Click(object sender, EventArgs e)
 		{
-      client1.enterGame(charsClient1List.SelectedIndex);
+      client1.enterGame(charsClient1List.SelectedItem.ToString());
+		}
+
+		private void openInvClient1Btn_Click(object sender, EventArgs e)
+		{
+      client1.charLoggedIn.inventory.gui.Show();
 		}
 
 		private void toolStripButton3_Click(object sender, EventArgs e)// prev

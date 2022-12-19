@@ -70,6 +70,7 @@
     <Compile Include="IKVInventory.cs" />
     <Compile Include="IKVItem.cs" />
     <Compile Include="IKVItemBag.cs" />
+    <Compile Include="IKVItemSlot.cs" />
     <Compile Include="IKVMoveCommand.cs" />
     <Compile Include="IKVResponse.cs" />
     <Compile Include="Interfaces.cs">
@@ -113,6 +114,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\IKVItemSlot.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

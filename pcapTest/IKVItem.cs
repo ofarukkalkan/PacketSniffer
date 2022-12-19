@@ -1,54 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace pcapTest
 {
 	public class IKVItem
 	{
-		public IKVItem(Dictionary<string, byte[]> map)
+		public Dictionary<string, byte[]> data = new Dictionary<string, byte[]>();
+		public int slot;
+		public int itemId;
+		public IKVItem()
 		{
-			data = map;
 
 		}
 
-		public IKVItem(IKVItem other)
+		public static IKVItem parse(byte[] data, int begin, int end)
 		{
-			data = other.data;
-		}
-		public static List<IKVItem> parse(byte[] data, int bytesread)
-		{
-			byte[] end_token = new byte[] { 0x00, 0x00, 0x7a, 0x44 };
+			IKVItem newItem = new IKVItem();
 
-			List<IKVItem> list = new List<IKVItem>();
+			int tmpBegin = begin;
+			for (int i = 0; i < 10 && tmpBegin < end; i++, tmpBegin += 4) {
 
-			Dictionary<string, byte[]> map = new Dictionary<string, byte[]>();
-			int bytePos = 4;
-			int rowCounter = 1;
-
-			while (bytePos < bytesread)
-			{
-				byte[] currentRow = data.Skip(bytePos).Take(4).ToArray();
-				map["data" + rowCounter] = currentRow;
-				bytePos += 4;
-				rowCounter++;
-
-				if (Utils.startsWithCommand(currentRow, currentRow.Length, end_token))
-				{
-					IKVItem newItem = new IKVItem(map);
-					list.Add(newItem);
-					map.Clear();
-				}
+				newItem.data["data" + i] = data.Skip(tmpBegin).Take(4).ToArray();
 
 			}
-			return list;
+			newItem.slot = BitConverter.ToInt32(newItem.data["data0"], 0);
+			newItem.itemId = BitConverter.ToInt32(newItem.data["data1"], 0);
+
+			return newItem;
 		}
 
-		Dictionary<string, byte[]> data;
+		public override bool Equals(object obj)
+		{
+			//Check for null and compare run-time types.
+			if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+			{
+				return false;
+			}
+			IKVItem other = (IKVItem)obj;
+			foreach (var row in data)
+			{
+				if (BitConverter.ToInt32(other.data[row.Key], 0)
+					!= BitConverter.ToInt32(row.Value, 0))
+					return false;
+			}
+			return true;
+		}
 
 		public override string ToString()
+		{
+			return BitConverter.ToString(data["data1"]);
+		}
+
+		public string getDetail()
 		{
 			string str = "";
 			foreach (var row in data)
@@ -57,6 +61,7 @@ namespace pcapTest
 			}
 			return str;
 		}
+
 	}
 
 }

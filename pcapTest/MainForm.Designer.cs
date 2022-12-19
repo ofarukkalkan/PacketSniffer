@@ -381,6 +381,7 @@
 			this.openInvClient1Btn.TabIndex = 38;
 			this.openInvClient1Btn.Text = "open inventory";
 			this.openInvClient1Btn.UseVisualStyleBackColor = true;
+			this.openInvClient1Btn.Click += new System.EventHandler(this.openInvClient1Btn_Click);
 			// 
 			// openInvClient2Btn
 			// 

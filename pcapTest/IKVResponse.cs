@@ -18,7 +18,24 @@ namespace pcapTest
 		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
 		{
 			int charCount = BitConverter.ToInt32(data, begin + 8);
+			byte[] endToken = { 0xff, 0xff, 0xff, 0xff };
+
+			int tmpBegin = begin + 12;
 			
+			for (int i = 0; i < charCount; i++)
+			{
+
+				int pos = Utils.containsCommand(data, tmpBegin, end, endToken);
+				if(pos > 0)
+				{
+					IKVCharacter newChar = IKVCharacter.parse(data, tmpBegin, pos);
+					gameClient.chars.Add(newChar);
+
+					Action action = () => gameClient.charListBox.Items.Add(newChar);
+					gameClient.charListBox.Invoke(action);
+				}
+				tmpBegin = pos + 4;
+			}
 
 
 
@@ -36,8 +53,8 @@ namespace pcapTest
 		{
 			IKVItemBag bag = IKVItemBag.parse(data, end);
 
-			Action action = () => gameClient.charLoggedIn.inventory.bagList.Items.Add(bag);
-			gameClient.charLoggedIn.inventory.bagList.Invoke(action);
+			Action action = () => gameClient.charLoggedIn.inventory.gui.bagList.Items.Add(bag);
+			gameClient.charLoggedIn.inventory.gui.bagList.Invoke(action);
 			return true;
 		}
 	}

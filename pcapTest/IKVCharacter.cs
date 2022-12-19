@@ -12,10 +12,31 @@ namespace pcapTest
 		{
 
 		}
-		public static List<IKVCharacter> parse(byte[] data, int bytesread)
+		public static IKVCharacter parse(byte[] data, int begin, int end)
 		{
-			return null;
+			IKVCharacter newChar = new IKVCharacter();
+			// parse name
+			int pos = begin;
+			List<byte> nameList = new List<byte>();
+	
+			while (data[pos] != 0x00)
+			{
+				nameList.Add(data[pos]);
+				pos++;
+			}
+			newChar.name = System.Text.Encoding.Default.GetString(nameList.ToArray());
+			pos += 13;
+
+			IKVInventory newInv = IKVInventory.parse(data, pos, end);
+			newChar.inventory = newInv;
+
+			return newChar;
 		}
-		public IKVInventoryGUI inventory = new IKVInventoryGUI();
+		public override string ToString()
+		{
+			return name;
+		}
+		public IKVInventory inventory;
+		public string name;
 	}
 }

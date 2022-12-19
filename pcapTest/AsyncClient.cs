@@ -44,20 +44,20 @@ namespace pcapTest
 		bool plusSubs;
 		string ip_addess = "93.155.105.236";
 
-		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection, bool plusSubs)
+		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection, bool plusSubs, ListBox charListBox)
 		{
 			this.loginData = loginData;
 			this.charSelection = charSelection;
 			this.port = port;
 			this.plusSubs = plusSubs;
+			this.charListBox = charListBox;
 
 			commands_map = IKVCommand.getCommandMap();
 			response_map = IKVResponse.getResponseMap();
 
 			ipAddress = IPAddress.Parse(ip_addess);
 			remoteEP = new IPEndPoint(ipAddress, port);
-			// Create a TCP/IP socket.  
-			client = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
 		}
 
 
@@ -100,6 +100,8 @@ namespace pcapTest
 
 			try
 			{
+				// Create a TCP/IP socket.  
+				client = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
 				client.DontFragment = true;
 				client.Ttl = 128;
@@ -300,8 +302,14 @@ namespace pcapTest
 			runCmdWithData("interactcmd___", datacmd.Concat(lastSelectedBag.id).ToArray());
 		}
 
-		public void enterGame(int charIndex)
+		public void enterGame(string charName)
 		{
+			charLoggedIn = chars.Find(character => character.name == charName);
+			if (charLoggedIn == null)
+			{
+				MessageBox.Show("char not found");
+				return;
+			}
 			///////////////// karakter sec
 			Send(client, commands_map["interactcmd___"].bytes);
 			sendDone.WaitOne();
@@ -320,6 +328,8 @@ namespace pcapTest
 			Console.WriteLine("Oyuna girme istegi gonderildi ");
 
 			Thread.Sleep(200);
+
+
 		}
 
 
@@ -329,6 +339,11 @@ namespace pcapTest
 		}
 		public void stop()
 		{
+			if(client == null)
+			{
+				MessageBox.Show("client is not started");
+				return;
+			}
 			// Release the socket.  
 			client.Shutdown(SocketShutdown.Both);
 			client.Close();
