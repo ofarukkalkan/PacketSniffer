@@ -71,21 +71,6 @@ namespace pcapTest
 				if (cmdPos > 0)
 				{
 					flag = response.Value.process(this, data, cmdPos, bytesRead);
-
-					//if (response.Key == "bagopened______")
-					//{
-					//	var items = IKVItem.parse(data, bytesRead);
-
-					//	for (int i = 0; i < items.Count; i++)
-					//	{
-					//		lastSelectedBag.setItem(i, items[i]);
-
-					//		Action action = () => gameClient.charLoggedIn.inventory.itemList.Items.Add(items[i]);
-					//		gameClient.charLoggedIn.inventory.bagList.Invoke(action);
-
-					//	}
-					//}
-
 				}
 			}
 
@@ -266,7 +251,7 @@ namespace pcapTest
 			}
 		}
 
-		public void repeatCmd(byte[] cmd)
+		public override void repeatCmd(byte[] cmd)
 		{
 			if (cmd == null) return;
 			bool flag = true;
@@ -283,26 +268,14 @@ namespace pcapTest
 				Console.WriteLine("unknown_command -> " + BitConverter.ToString(cmd.Take(cmd.Length > 16 ? 16 : cmd.Length).ToArray()));
 		}
 
-		public void runCmdWithData(string cmd, byte[] datacmd)
+		public override void runCmdWithData(string cmd, byte[] datacmd)
 		{
 			Send(client, commands_map[cmd].bytes);
 			sendDone.WaitOne();
 			Send(client, datacmd);
 		}
 
-		public void gotoBag()
-		{
-			IKVMoveCommand datacmd = IKVMoveCommand.prepMoveData(commands_map["movedata_______"], lastSelectedBag.pos);
-			runCmdWithData("movecmd________", datacmd.bytes);
-		}
-
-		public void openBag()
-		{
-			byte[] datacmd = commands_map["selectbagcmd__"].bytes;
-			runCmdWithData("interactcmd___", datacmd.Concat(lastSelectedBag.id).ToArray());
-		}
-
-		public void enterGame(string charName)
+		public override void enterGame(string charName)
 		{
 			charLoggedIn = chars.Find(character => character.name == charName);
 			if (charLoggedIn == null)

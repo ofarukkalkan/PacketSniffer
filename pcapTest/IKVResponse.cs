@@ -28,7 +28,7 @@ namespace pcapTest
 				int pos = Utils.containsCommand(data, tmpBegin, end, endToken);
 				if(pos > 0)
 				{
-					IKVCharacter newChar = IKVCharacter.parse(data, tmpBegin, pos);
+					IKVCharacter newChar = IKVCharacter.parse(gameClient, data, tmpBegin, pos);
 					gameClient.chars.Add(newChar);
 
 					Action action = () => gameClient.charListBox.Items.Add(newChar);
@@ -55,6 +55,27 @@ namespace pcapTest
 
 			Action action = () => gameClient.charLoggedIn.inventory.gui.bagList.Items.Add(bag);
 			gameClient.charLoggedIn.inventory.gui.bagList.Invoke(action);
+			return true;
+		}
+	}
+
+	class BagOpenedResponse : IKVResponse
+	{
+		public BagOpenedResponse(byte[] cmd) : base(cmd)
+		{
+		}
+
+		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
+		{
+			int tmpBegin = begin + 8;
+
+			for (; tmpBegin < end; tmpBegin += 36)
+			{
+				IKVItem item = IKVItem.parse(data, tmpBegin, tmpBegin + 36, true);
+				Action action = () => gameClient.charLoggedIn.inventory.gui.itemList.Items.Add(item);
+				gameClient.charLoggedIn.inventory.gui.itemList.Invoke(action);
+			}
+
 			return true;
 		}
 	}
@@ -91,8 +112,8 @@ namespace pcapTest
 					[nameof(BagDroppedResponse)] = new BagDroppedResponse(new byte[] {
 					0x70, 0x73, 0x62, 0x61}),
 
-					//["bagopened______"] = new IKVResponse(new byte[] {
-					//0x73, 0x64, 0x62, 0x74})
+					[nameof(BagOpenedResponse)] = new BagOpenedResponse(new byte[] {
+					0x73, 0x64, 0x62, 0x74})
 				};
 
 				return map;

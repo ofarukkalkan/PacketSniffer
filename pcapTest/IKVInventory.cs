@@ -8,9 +8,14 @@ namespace pcapTest
 {
 	public class IKVInventory
 	{
-		public IKVInventory()
+		public IKVInventory(IKVGame gameClient)
 		{
-			slots = new Dictionary<int, IKVItemSlot>();
+
+			this.slots = new Dictionary<int, IKVItemSlot>();
+			this.gameClient = gameClient;
+			this.gui = new IKVInventoryGUI(gameClient);
+
+
 			int slotCounter = 0;
 			for (int i = 0; i < 9; i++)
 			{
@@ -74,9 +79,9 @@ namespace pcapTest
 
 
 		}
-		public static IKVInventory parse(byte[] data, int begin, int end)
+		public static IKVInventory parse(IKVGame gameClient, byte[] data, int begin, int end)
 		{
-			IKVInventory newInv = new IKVInventory();
+			IKVInventory newInv = new IKVInventory(gameClient);
 
 			int tmpBegin = begin;
 
@@ -94,9 +99,10 @@ namespace pcapTest
 			return newInv;
 		}
 
+		public IKVGame gameClient;
 		public Dictionary<int,IKVItemSlot> slots { set; get; }
-		
-		public IKVInventoryGUI gui = new IKVInventoryGUI();
+
+		public IKVInventoryGUI gui;
 
 	}
 }

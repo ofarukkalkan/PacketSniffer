@@ -9,17 +9,22 @@ namespace pcapTest
 		public Dictionary<string, byte[]> data = new Dictionary<string, byte[]>();
 		public int slot;
 		public int itemId;
+		public bool bagItem = false;
 		public IKVItem()
 		{
 
 		}
 
-		public static IKVItem parse(byte[] data, int begin, int end)
+		public static IKVItem parse(byte[] data, int begin, int end, bool bagItem = false)
 		{
 			IKVItem newItem = new IKVItem();
+			newItem.bagItem = true;
 
+			int rowCount = 10;
+			if (bagItem)
+				rowCount = 9;
 			int tmpBegin = begin;
-			for (int i = 0; i < 10 && tmpBegin < end; i++, tmpBegin += 4) {
+			for (int i = 0; i < rowCount && tmpBegin < end; i++, tmpBegin += 4) {
 
 				newItem.data["data" + i] = data.Skip(tmpBegin).Take(4).ToArray();
 

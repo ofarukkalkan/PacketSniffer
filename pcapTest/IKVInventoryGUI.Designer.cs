@@ -30,6 +30,7 @@
 		{
 			this.bagList = new System.Windows.Forms.ListBox();
 			this.itemList = new System.Windows.Forms.ListBox();
+			this.openBagBtn = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// bagList
@@ -43,16 +44,27 @@
 			// itemList
 			// 
 			this.itemList.FormattingEnabled = true;
-			this.itemList.Location = new System.Drawing.Point(12, 204);
+			this.itemList.Location = new System.Drawing.Point(12, 233);
 			this.itemList.Name = "itemList";
 			this.itemList.Size = new System.Drawing.Size(183, 134);
 			this.itemList.TabIndex = 46;
+			// 
+			// openBagBtn
+			// 
+			this.openBagBtn.Location = new System.Drawing.Point(12, 204);
+			this.openBagBtn.Name = "openBagBtn";
+			this.openBagBtn.Size = new System.Drawing.Size(75, 23);
+			this.openBagBtn.TabIndex = 47;
+			this.openBagBtn.Text = "open bag";
+			this.openBagBtn.UseVisualStyleBackColor = true;
+			this.openBagBtn.Click += new System.EventHandler(this.openBagBtn_Click);
 			// 
 			// IKVInventoryGUI
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(735, 442);
+			this.Controls.Add(this.openBagBtn);
 			this.Controls.Add(this.itemList);
 			this.Controls.Add(this.bagList);
 			this.Name = "IKVInventoryGUI";
@@ -64,5 +76,6 @@
 		#endregion
 		public System.Windows.Forms.ListBox bagList;
 		public System.Windows.Forms.ListBox itemList;
+		private System.Windows.Forms.Button openBagBtn;
 	}
 }

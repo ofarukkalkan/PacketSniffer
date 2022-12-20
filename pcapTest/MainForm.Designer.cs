@@ -64,6 +64,7 @@
 			this.openInvClient2Btn = new System.Windows.Forms.Button();
 			this.charsClient1List = new System.Windows.Forms.ListBox();
 			this.enterGameClient1Btn = new System.Windows.Forms.Button();
+			this.client1TerminalBox = new System.Windows.Forms.TextBox();
 			this.menuStrip1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -77,7 +78,7 @@
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-			this.menuStrip1.Size = new System.Drawing.Size(639, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(886, 24);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -202,7 +203,7 @@
             this.toolStripButton6});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 24);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(639, 27);
+			this.toolStrip1.Size = new System.Drawing.Size(886, 27);
 			this.toolStrip1.TabIndex = 11;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -295,7 +296,7 @@
 			// 
 			// startClient2
 			// 
-			this.startClient2.Location = new System.Drawing.Point(414, 135);
+			this.startClient2.Location = new System.Drawing.Point(542, 135);
 			this.startClient2.Name = "startClient2";
 			this.startClient2.Size = new System.Drawing.Size(75, 27);
 			this.startClient2.TabIndex = 16;
@@ -316,7 +317,7 @@
 			// repeatClient2Chk
 			// 
 			this.repeatClient2Chk.AutoSize = true;
-			this.repeatClient2Chk.Location = new System.Drawing.Point(414, 112);
+			this.repeatClient2Chk.Location = new System.Drawing.Point(542, 112);
 			this.repeatClient2Chk.Name = "repeatClient2Chk";
 			this.repeatClient2Chk.Size = new System.Drawing.Size(70, 17);
 			this.repeatClient2Chk.TabIndex = 19;
@@ -335,7 +336,7 @@
 			// 
 			// acceptRequestBtn2
 			// 
-			this.acceptRequestBtn2.Location = new System.Drawing.Point(414, 168);
+			this.acceptRequestBtn2.Location = new System.Drawing.Point(542, 168);
 			this.acceptRequestBtn2.Name = "acceptRequestBtn2";
 			this.acceptRequestBtn2.Size = new System.Drawing.Size(104, 27);
 			this.acceptRequestBtn2.TabIndex = 21;
@@ -365,7 +366,7 @@
 			// stopClien2Btn
 			// 
 			this.stopClien2Btn.Enabled = false;
-			this.stopClien2Btn.Location = new System.Drawing.Point(495, 135);
+			this.stopClien2Btn.Location = new System.Drawing.Point(623, 135);
 			this.stopClien2Btn.Name = "stopClien2Btn";
 			this.stopClien2Btn.Size = new System.Drawing.Size(74, 27);
 			this.stopClien2Btn.TabIndex = 37;
@@ -385,7 +386,7 @@
 			// 
 			// openInvClient2Btn
 			// 
-			this.openInvClient2Btn.Location = new System.Drawing.Point(414, 208);
+			this.openInvClient2Btn.Location = new System.Drawing.Point(542, 208);
 			this.openInvClient2Btn.Name = "openInvClient2Btn";
 			this.openInvClient2Btn.Size = new System.Drawing.Size(100, 23);
 			this.openInvClient2Btn.TabIndex = 39;
@@ -410,11 +411,20 @@
 			this.enterGameClient1Btn.UseVisualStyleBackColor = true;
 			this.enterGameClient1Btn.Click += new System.EventHandler(this.enterGameClient1Btn_Click);
 			// 
+			// client1TerminalBox
+			// 
+			this.client1TerminalBox.Location = new System.Drawing.Point(199, 436);
+			this.client1TerminalBox.Multiline = true;
+			this.client1TerminalBox.Name = "client1TerminalBox";
+			this.client1TerminalBox.Size = new System.Drawing.Size(276, 312);
+			this.client1TerminalBox.TabIndex = 42;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(639, 760);
+			this.ClientSize = new System.Drawing.Size(886, 760);
+			this.Controls.Add(this.client1TerminalBox);
 			this.Controls.Add(this.enterGameClient1Btn);
 			this.Controls.Add(this.charsClient1List);
 			this.Controls.Add(this.openInvClient2Btn);
@@ -488,5 +498,6 @@
 		private System.Windows.Forms.Button openInvClient2Btn;
 		private System.Windows.Forms.ListBox charsClient1List;
 		private System.Windows.Forms.Button enterGameClient1Btn;
+		private System.Windows.Forms.TextBox client1TerminalBox;
 	}
 }

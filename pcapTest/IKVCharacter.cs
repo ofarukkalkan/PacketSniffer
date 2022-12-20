@@ -12,7 +12,7 @@ namespace pcapTest
 		{
 
 		}
-		public static IKVCharacter parse(byte[] data, int begin, int end)
+		public static IKVCharacter parse(IKVGame gameClient, byte[] data, int begin, int end)
 		{
 			IKVCharacter newChar = new IKVCharacter();
 			// parse name
@@ -27,7 +27,7 @@ namespace pcapTest
 			newChar.name = System.Text.Encoding.Default.GetString(nameList.ToArray());
 			pos += 13;
 
-			IKVInventory newInv = IKVInventory.parse(data, pos, end);
+			IKVInventory newInv = IKVInventory.parse(gameClient, data, pos, end);
 			newChar.inventory = newInv;
 
 			return newChar;
