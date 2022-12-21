@@ -55,6 +55,9 @@ namespace pcapTest
 			0x15, 0x00, 0x00, 0x00}, true),
 				["msgdata_______"] = new IKVCommand(new byte[] {
 			0x63, 0x64, 0x66, 0x63}, true),
+				// login
+				["charselectdata"] = new IKVCommand(new byte[] {
+			 0x6c, 0x61, 0x73, 0x63}, false),
 
 				//commands_map["acceptpartydat"] = new byte[] {
 				//0x63, 0x79, 0x6e, 0x69};
