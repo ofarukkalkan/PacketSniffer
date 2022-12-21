@@ -6,32 +6,38 @@ namespace pcapTest
 {
 	public class IKVItem
 	{
-		public Dictionary<string, byte[]> data = new Dictionary<string, byte[]>();
+		public List<byte[]> data = new List<byte[]>();
 		public int slot;
 		public int itemId;
-		public bool bagItem = false;
 		public IKVItem()
 		{
 
 		}
 
-		public static IKVItem parse(byte[] data, int begin, int end, bool bagItem = false)
+		public static IKVItem parse(byte[] data, int begin, int end, int bagSlot = -1)
 		{
 			IKVItem newItem = new IKVItem();
-			newItem.bagItem = true;
 
 			int rowCount = 10;
-			if (bagItem)
+			if (bagSlot != -1)
 				rowCount = 9;
 			int tmpBegin = begin;
-			for (int i = 0; i < rowCount && tmpBegin < end; i++, tmpBegin += 4) {
 
-				newItem.data["data" + i] = data.Skip(tmpBegin).Take(4).ToArray();
-
+			for (int i = 0; i < rowCount && tmpBegin < end; i++, tmpBegin += 4)
+			{
+				newItem.data.Add(data.Skip(tmpBegin).Take(4).ToArray());
 			}
-			newItem.slot = BitConverter.ToInt32(newItem.data["data0"], 0);
-			newItem.itemId = BitConverter.ToInt32(newItem.data["data1"], 0);
 
+			if (bagSlot != -1)
+			{
+				newItem.slot = bagSlot;
+				newItem.itemId = BitConverter.ToInt32(newItem.data[0], 0);
+			}
+			else
+			{
+				newItem.slot = BitConverter.ToInt32(newItem.data[0], 0);
+				newItem.itemId = BitConverter.ToInt32(newItem.data[1], 0);
+			}
 			return newItem;
 		}
 
@@ -43,28 +49,15 @@ namespace pcapTest
 				return false;
 			}
 			IKVItem other = (IKVItem)obj;
-			foreach (var row in data)
-			{
-				if (BitConverter.ToInt32(other.data[row.Key], 0)
-					!= BitConverter.ToInt32(row.Value, 0))
-					return false;
-			}
-			return true;
+			if (other.itemId == itemId && other.slot == slot)
+				return true;
+			else 
+				return false;
 		}
 
 		public override string ToString()
 		{
-			return BitConverter.ToString(data["data1"]);
-		}
-
-		public string getDetail()
-		{
-			string str = "";
-			foreach (var row in data)
-			{
-				str += "[" + row.Key + "=" + BitConverter.ToString(row.Value) + "]";
-			}
-			return str;
+			return BitConverter.ToString(BitConverter.GetBytes(itemId));
 		}
 
 	}

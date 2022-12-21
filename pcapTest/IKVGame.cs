@@ -38,7 +38,25 @@ namespace pcapTest
 				return;
 			}
 			byte[] datacmd = commands_map["selectbagcmd__"].bytes;
-			runCmdWithData("interactcmd___", datacmd.Concat(bag.id).ToArray());
+			byte[] bagId = BitConverter.GetBytes(bag.Id);
+			runCmdWithData("interactcmd___", datacmd.Concat(bagId).ToArray());
+		}
+
+		public bool grabBagItem(IKVItemBag bag, IKVItem bagItem, int bagSlot)
+		{
+			if (bagItem == null || bagItem.itemId == 0)
+			{
+				MessageBox.Show("item is null or empty");
+				return false;
+			}
+			
+			byte[] emptySlotBytes = BitConverter.GetBytes(charLoggedIn.inventory.getFirstEmptySlot());
+			byte[] bagSlotBytes = BitConverter.GetBytes(bagSlot);
+			byte[] datacmd = commands_map["itemgrabdata__"].bytes;
+			byte[] bagId = BitConverter.GetBytes(bag.Id);
+			runCmdWithData("itemcmd_______", datacmd.Concat(bagId).Concat(bagSlotBytes).Concat(emptySlotBytes).ToArray());
+
+			return true;
 		}
 
 		public virtual void repeatCmd(byte[] cmd)

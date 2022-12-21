@@ -71,11 +71,11 @@ namespace pcapTest
 			0x62, 0x74, 0x6c, 0x72}, false)
 			};
 
-			//commands_map["itemcmd_______"] = new byte[] {
-			//0x10, 0x00, 0x00, 0x00};
+			commands_map["itemcmd_______"] = new IKVCommand(new byte[] {
+			0x10, 0x00, 0x00, 0x00}, false);
 
-			//commands_map["itemgrabdata__"] = new byte[] {
-			//0x74, 0x6d, 0x6f, 0x6c};
+			commands_map["itemgrabdata__"] = new IKVCommand(new byte[] {
+			0x74, 0x6d, 0x6f, 0x6c}, false);
 
 
 			return commands_map;

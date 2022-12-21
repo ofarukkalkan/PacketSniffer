@@ -8,26 +8,11 @@ namespace pcapTest
 {
 	public class IKVItemBag
 	{
-		public IKVItemBag(byte[] id, IKVVec3Byte pos)
+		public IKVItemBag(int id, IKVVec3Byte pos)
 		{
-			this.id = id;
+			this.Id = id;
 			this.pos = pos;
-		}
-
-		public void setItem(int index, IKVItem item)
-		{
-			items[index] = item;
-		}
-
-		public IKVItem takeItem(int index)
-		{
-			if (index < items.Count)
-			{
-				IKVItem item = items[index];
-				items[index] = null;
-				return item;
-			}
-			else return null;
+			this.items = new List<IKVItem>();
 		}
 
 		public static IKVItemBag parse(byte[] data, int bytesread)
@@ -35,7 +20,7 @@ namespace pcapTest
 			if (bytesread < 24)
 				return null;
 
-			byte[] id = data.Skip(8).Take(4).ToArray();
+			int id = BitConverter.ToInt32(data.Skip(8).Take(4).ToArray(), 0);
 			byte[] x = data.Skip(12).Take(4).ToArray();
 			byte[] z = data.Skip(16).Take(4).ToArray();
 			byte[] y = data.Skip(20).Take(4).ToArray();
@@ -44,22 +29,16 @@ namespace pcapTest
 			IKVItemBag bag = new IKVItemBag(id, pos);
 			return bag;
 		}
-		public string listItems()
-		{
-			string str = "";
-			foreach (var item in items)
-			{
-				str += "[" + item.Key + " : " + item.Value.ToString() + "]";
-			}
-			return str;
-		}
+
 		public override string ToString()
 		{
-			return "bag -> id : " + BitConverter.ToString(id) + " " + pos.ToString();
+			return BitConverter.ToString(BitConverter.GetBytes(Id));
 		}
 
-		public byte[] id;
+		private int id;
 		public IKVVec3Byte pos;
-		public Dictionary<int, IKVItem> items;
+		public List<IKVItem> items;
+
+		public int Id { get => id; set => id = value; }
 	}
 }
