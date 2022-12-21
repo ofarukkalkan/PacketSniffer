@@ -41,7 +41,7 @@ namespace pcapTest
 				byte[] loginBytes = Utils.ToByteArray(loginDataListBox.SelectedItem.ToString().Split(' ')[1]);
 				byte[] charSelectionBytes = Utils.ToByteArray(charSelectionDataListBox.SelectedItem.ToString().Split(' ')[1]);
 
-				client = new AsynchronousClient(port, loginBytes, charSelectionBytes, charsList);
+				client = new AsynchronousClient(port, loginBytes, charSelectionBytes, charsList, chatBox);
 				Thread t1 = new Thread(new ThreadStart(client.start));
 				t1.Start();
 				startClientBtn.Enabled = false;

@@ -44,13 +44,14 @@ namespace pcapTest
 
 		string ip_addess = "93.155.105.236";
 
-		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection,  ListBox charListBox)
+		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection,  ListBox charListBox, ListBox chatBox)
 		{
 			this.loginData = loginData;
 			this.charSelection = charSelection;
 			this.port = port;
 
 			this.charListBox = charListBox;
+			this.chatBox = chatBox;
 
 			commands_map = IKVCommand.getCommandMap();
 			response_map = IKVResponse.getResponseMap();

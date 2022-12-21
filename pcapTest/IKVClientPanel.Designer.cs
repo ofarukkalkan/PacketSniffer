@@ -29,7 +29,6 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IKVClientPanel));
-			this.chatBox = new System.Windows.Forms.TextBox();
 			this.enterGameBtn = new System.Windows.Forms.Button();
 			this.charsList = new System.Windows.Forms.ListBox();
 			this.openInventoryBtn = new System.Windows.Forms.Button();
@@ -40,16 +39,8 @@
 			this.loginDataListBox = new System.Windows.Forms.ListBox();
 			this.charSelectionDataListBox = new System.Windows.Forms.ListBox();
 			this.portListBox = new System.Windows.Forms.ListBox();
+			this.chatBox = new System.Windows.Forms.ListBox();
 			this.SuspendLayout();
-			// 
-			// chatBox
-			// 
-			this.chatBox.Enabled = false;
-			this.chatBox.Location = new System.Drawing.Point(12, 427);
-			this.chatBox.Multiline = true;
-			this.chatBox.Name = "chatBox";
-			this.chatBox.Size = new System.Drawing.Size(291, 150);
-			this.chatBox.TabIndex = 49;
 			// 
 			// enterGameBtn
 			// 
@@ -157,16 +148,24 @@
 			this.portListBox.Size = new System.Drawing.Size(291, 69);
 			this.portListBox.TabIndex = 53;
 			// 
+			// chatBox
+			// 
+			this.chatBox.FormattingEnabled = true;
+			this.chatBox.Location = new System.Drawing.Point(12, 427);
+			this.chatBox.Name = "chatBox";
+			this.chatBox.Size = new System.Drawing.Size(291, 147);
+			this.chatBox.TabIndex = 54;
+			// 
 			// IKVClientPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(315, 589);
+			this.Controls.Add(this.chatBox);
 			this.Controls.Add(this.portListBox);
 			this.Controls.Add(this.charSelectionDataListBox);
 			this.Controls.Add(this.loginDataListBox);
 			this.Controls.Add(this.repeatChk);
-			this.Controls.Add(this.chatBox);
 			this.Controls.Add(this.enterGameBtn);
 			this.Controls.Add(this.charsList);
 			this.Controls.Add(this.openInventoryBtn);
@@ -182,8 +181,6 @@
 		}
 
 		#endregion
-
-		private System.Windows.Forms.TextBox chatBox;
 		private System.Windows.Forms.Button enterGameBtn;
 		private System.Windows.Forms.ListBox charsList;
 		private System.Windows.Forms.Button openInventoryBtn;
@@ -194,5 +191,6 @@
 		private System.Windows.Forms.ListBox loginDataListBox;
 		private System.Windows.Forms.ListBox charSelectionDataListBox;
 		private System.Windows.Forms.ListBox portListBox;
+		private System.Windows.Forms.ListBox chatBox;
 	}
 }
