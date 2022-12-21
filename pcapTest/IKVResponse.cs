@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 
 namespace pcapTest
@@ -146,6 +147,26 @@ namespace pcapTest
 		}
 	}
 
+	class SystemChatResponse : IKVResponse
+	{
+		public SystemChatResponse(byte[] cmd) : base(cmd)
+		{
+		}
+
+		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
+		{
+			int count = BitConverter.ToInt32(data.Skip(begin + 12).Take(4).ToArray(), 0);
+			string msg = Encoding.UTF8.GetString(data, begin + 16, begin + 16 + count);
+
+			Action act = () =>
+			{
+				gameClient.chatBox.Items.Add(msg);
+			};
+			gameClient.chatBox.Invoke(act);
+			return true;
+		}
+	}
+
 
 	public abstract class IKVResponse
 	{
@@ -183,7 +204,10 @@ namespace pcapTest
 
 					[nameof(BagItemGrabbedResponse)] = new BagItemGrabbedResponse(new byte[] {
 					0x66, 0x61, 0x74, 0x6c}),
-					
+
+					[nameof(SystemChatResponse)] = new SystemChatResponse(new byte[] {
+					0x63, 0x74, 0x65, 0x72}),
+
 				};
 
 				return map;

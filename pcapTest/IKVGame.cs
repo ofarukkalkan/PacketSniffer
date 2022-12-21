@@ -22,6 +22,7 @@ namespace pcapTest
 
 		public List<IKVCharacter> chars = new List<IKVCharacter>();
 		public ListBox charListBox;
+		public ListBox chatBox;
 		public IKVCharacter charLoggedIn;
 
 		public void gotoBag(IKVItemBag bag)
