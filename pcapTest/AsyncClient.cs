@@ -41,15 +41,15 @@ namespace pcapTest
 
 		// The port number for the remote device.  
 		int port; // kuklaci 27206 // beyazkosk 27205
-		bool plusSubs;
+
 		string ip_addess = "93.155.105.236";
 
-		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection, bool plusSubs, ListBox charListBox)
+		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection,  ListBox charListBox)
 		{
 			this.loginData = loginData;
 			this.charSelection = charSelection;
 			this.port = port;
-			this.plusSubs = plusSubs;
+
 			this.charListBox = charListBox;
 
 			commands_map = IKVCommand.getCommandMap();
@@ -105,13 +105,9 @@ namespace pcapTest
 				sendDone.WaitOne();
 				Console.WriteLine("Giris istegi gonderildi");
 				Receive(client);
-				///////////////// giris bilgilerini gonder
-				// Send(client, new byte[] { 0x72, 0x00, 0x00, 0x00 }); // kuklaci
-				if(plusSubs)
-					Send(client, new byte[] { 0x66, 0x00, 0x00, 0x00 }); // beyazkosk plus
-				else
-					Send(client, new byte[] { 0x70, 0x00, 0x00, 0x00 }); // beyazkosk
 
+				///////////////// giris bilgilerini gonder
+				Send(client, BitConverter.GetBytes(loginData.Length));
 				sendDone.WaitOne();
 				Send(client, loginData);
 				sendDone.WaitOne();
@@ -292,7 +288,8 @@ namespace pcapTest
 			///////////////// karakter sec
 			Send(client, commands_map["interactcmd___"].bytes);
 			sendDone.WaitOne();
-			Send(client, charSelection);
+			byte[] selectiondata = commands_map["charselectdata"].bytes;
+			Send(client, selectiondata.Concat(charSelection).ToArray());
 			sendDone.WaitOne();
 			Console.WriteLine("Karakter secme istegi gonderildi ");
 			Receive(client);
