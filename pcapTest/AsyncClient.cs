@@ -73,10 +73,10 @@ namespace pcapTest
 					flag = response.Value.process(this, data, cmdPos, bytesRead);
 				}
 			}
-
+#if DEBUG
 			if (flag)
 				Console.WriteLine("unknown_command -> " + BitConverter.ToString(data.Take(bytesRead > 16 ? 16 : bytesRead).ToArray()));
-
+#endif
 		}
 
 
@@ -225,7 +225,10 @@ namespace pcapTest
 
 		private void Send(Socket client, byte[] byteData)
 		{
+#if DEBUG
 			Console.WriteLine("Sending bytes to server : " + BitConverter.ToString(byteData.Take(byteData.Length > 16 ? 16 : byteData.Length).ToArray()));
+#endif
+
 			// Begin sending the data to the remote device.  
 			client.BeginSend(byteData, 0, byteData.Length, 0,
 					new AsyncCallback(SendCallback), client);
@@ -240,8 +243,9 @@ namespace pcapTest
 
 				// Complete sending the data to the remote device.  
 				int bytesSent = client.EndSend(ar);
+#if DEBUG
 				Console.WriteLine("Sent {0} bytes to server.", bytesSent);
-
+#endif
 				// Signal that all bytes have been sent.  
 				sendDone.Set();
 			}
@@ -264,8 +268,10 @@ namespace pcapTest
 					Send(client, cmd);
 				}
 			}
+#if DEBUG
 			if (flag)
 				Console.WriteLine("unknown_command -> " + BitConverter.ToString(cmd.Take(cmd.Length > 16 ? 16 : cmd.Length).ToArray()));
+#endif
 		}
 
 		public override void runCmdWithData(string cmd, byte[] datacmd)

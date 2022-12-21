@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 
 namespace pcapTest
@@ -52,9 +53,13 @@ namespace pcapTest
 		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
 		{
 			IKVItemBag bag = IKVItemBag.parse(data, end);
-
-			Action action = () => gameClient.charLoggedIn.inventory.gui.bagList.Items.Add(bag);
-			gameClient.charLoggedIn.inventory.gui.bagList.Invoke(action);
+			gameClient.charLoggedIn.inventory.bags.Add(bag);
+			Action act = () =>
+			{
+				gameClient.charLoggedIn.inventory.gui.bagList.Items.Clear();
+				gameClient.charLoggedIn.inventory.gui.bagList.Items.AddRange(gameClient.charLoggedIn.inventory.bags.ToArray());
+			};
+			gameClient.charLoggedIn.inventory.gui.bagList.Invoke(act);
 			return true;
 		}
 	}
@@ -67,13 +72,74 @@ namespace pcapTest
 
 		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
 		{
-			int tmpBegin = begin + 8;
+			int tmpBegin = begin + 12;
+			int slotCounter = 0;
+			IKVItemBag bagOpened = null;
 
-			for (; tmpBegin < end; tmpBegin += 36)
+			int openedBagId = BitConverter.ToInt32(data.Skip(8).Take(4).ToArray(), 0);
+
+			foreach (var bag in gameClient.charLoggedIn.inventory.bags)
 			{
-				IKVItem item = IKVItem.parse(data, tmpBegin, tmpBegin + 36, true);
-				Action action = () => gameClient.charLoggedIn.inventory.gui.itemList.Items.Add(item);
-				gameClient.charLoggedIn.inventory.gui.itemList.Invoke(action);
+				if(bag.Id == openedBagId)
+				{
+					bagOpened = bag;
+					bagOpened.items.Clear();
+					break;
+				}
+			}
+
+
+			for (; tmpBegin < end; tmpBegin += 36, slotCounter++)
+			{
+				IKVItem item = IKVItem.parse(data, tmpBegin, tmpBegin + 36, slotCounter);
+				if (item.itemId != 0)
+				{
+					bagOpened?.items.Add(item);
+					Action action = () => gameClient.charLoggedIn.inventory.gui.itemList.Items.Add(item);
+					gameClient.charLoggedIn.inventory.gui.itemList.Invoke(action);
+				}
+
+			}
+
+			gameClient.charLoggedIn.inventory.openedBag = bagOpened;
+
+			return true;
+		}
+	}
+
+	class BagItemGrabbedResponse : IKVResponse
+	{
+		public BagItemGrabbedResponse(byte[] cmd) : base(cmd)
+		{
+		}
+
+		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
+		{
+
+			int itemId = BitConverter.ToInt32(data.Skip(begin + 4).Take(4).ToArray(), 0);
+			int invSlot = BitConverter.ToInt32(data.Skip(begin + 12).Take(4).ToArray(), 0);
+			int bagSlot = BitConverter.ToInt32(data.Skip(begin + 16).Take(4).ToArray(), 0);
+			int bagId = BitConverter.ToInt32(data.Skip(begin + 20).Take(4).ToArray(), 0);
+
+			if(gameClient.charLoggedIn.inventory.openedBag.Id == bagId)
+			{
+				foreach (var item in gameClient.charLoggedIn.inventory.openedBag.items)
+				{
+					if (item.itemId == itemId)
+					{
+						gameClient.charLoggedIn.inventory.openedBag.items.Remove(item);
+
+						Action action = () =>
+						{
+							gameClient.charLoggedIn.inventory.slots[invSlot].Item = item;
+							gameClient.charLoggedIn.inventory.gui.itemList.Items.Remove(item);
+							gameClient.charLoggedIn.inventory.gui.grabSelectedItemBtn.Enabled = true;
+						};
+						gameClient.charLoggedIn.inventory.gui.itemList.Invoke(action);
+						break;
+					}
+				}
+
 			}
 
 			return true;
@@ -113,7 +179,11 @@ namespace pcapTest
 					0x70, 0x73, 0x62, 0x61}),
 
 					[nameof(BagOpenedResponse)] = new BagOpenedResponse(new byte[] {
-					0x73, 0x64, 0x62, 0x74})
+					0x73, 0x64, 0x62, 0x74}),
+
+					[nameof(BagItemGrabbedResponse)] = new BagItemGrabbedResponse(new byte[] {
+					0x66, 0x61, 0x74, 0x6c}),
+					
 				};
 
 				return map;

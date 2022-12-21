@@ -10,7 +10,6 @@ namespace pcapTest
 	{
 		public IKVCharacter()
 		{
-
 		}
 		public static IKVCharacter parse(IKVGame gameClient, byte[] data, int begin, int end)
 		{

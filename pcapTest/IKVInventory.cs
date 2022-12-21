@@ -10,18 +10,21 @@ namespace pcapTest
 	{
 		public IKVInventory(IKVGame gameClient)
 		{
-
-			this.slots = new Dictionary<int, IKVItemSlot>();
+			this.bags = new List<IKVItemBag>();
+			this.slots = new List<IKVItemSlot>(36);
 			this.gameClient = gameClient;
 			this.gui = new IKVInventoryGUI(gameClient);
-
+			this.openedBag = null;
 
 			int slotCounter = 0;
 			for (int i = 0; i < 9; i++)
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					slots[slotCounter] = new IKVItemSlot(slotCounter, null);
+					IKVSlotType slotType = IKVSlotType.hidden;
+					if (slotCounter > 13)
+						slotType = IKVSlotType.bag;
+					slots.Add(new IKVItemSlot(slotCounter, null, slotType));
 					TextBox box = new TextBox
 					{
 						Size = new System.Drawing.Size(100, 40)
@@ -93,15 +96,23 @@ namespace pcapTest
 
 			}
 			
-
-			// newInv["bagSlot"] = BitConverter.ToInt32(data, begin + 4);
-
 			return newInv;
 		}
 
-		public IKVGame gameClient;
-		public Dictionary<int,IKVItemSlot> slots { set; get; }
+		public int getFirstEmptySlot()
+		{
+			for (int i = 0x0d; i <= 0x24; i++)
+			{
+				if (slots[i].Item == null)
+					return i;
+			}
+			return -1;
+		}
 
+		public IKVGame gameClient;
+		public List<IKVItemSlot> slots;
+		public List<IKVItemBag> bags;
+		public IKVItemBag openedBag;
 		public IKVInventoryGUI gui;
 
 	}

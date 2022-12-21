@@ -31,6 +31,7 @@
 			this.bagList = new System.Windows.Forms.ListBox();
 			this.itemList = new System.Windows.Forms.ListBox();
 			this.openBagBtn = new System.Windows.Forms.Button();
+			this.grabSelectedItemBtn = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// bagList
@@ -59,16 +60,28 @@
 			this.openBagBtn.UseVisualStyleBackColor = true;
 			this.openBagBtn.Click += new System.EventHandler(this.openBagBtn_Click);
 			// 
+			// grabSelectedItemBtn
+			// 
+			this.grabSelectedItemBtn.Location = new System.Drawing.Point(12, 373);
+			this.grabSelectedItemBtn.Name = "grabSelectedItemBtn";
+			this.grabSelectedItemBtn.Size = new System.Drawing.Size(87, 23);
+			this.grabSelectedItemBtn.TabIndex = 48;
+			this.grabSelectedItemBtn.Text = "grab selected item";
+			this.grabSelectedItemBtn.UseVisualStyleBackColor = true;
+			this.grabSelectedItemBtn.Click += new System.EventHandler(this.grabSelectedItemBtn_Click);
+			// 
 			// IKVInventoryGUI
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(735, 442);
+			this.Controls.Add(this.grabSelectedItemBtn);
 			this.Controls.Add(this.openBagBtn);
 			this.Controls.Add(this.itemList);
 			this.Controls.Add(this.bagList);
 			this.Name = "IKVInventoryGUI";
 			this.Text = "inventory";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.IKVInventoryGUI_FormClosing);
 			this.ResumeLayout(false);
 
 		}
@@ -77,5 +90,6 @@
 		public System.Windows.Forms.ListBox bagList;
 		public System.Windows.Forms.ListBox itemList;
 		private System.Windows.Forms.Button openBagBtn;
+		public System.Windows.Forms.Button grabSelectedItemBtn;
 	}
 }

@@ -8,12 +8,19 @@ using System.Threading.Tasks;
 
 namespace pcapTest
 {
+	public enum IKVSlotType
+	{
+		hidden,
+		equipment,
+		bag
+	}
 	public class IKVItemSlot : INotifyPropertyChanged
 	{
-		public IKVItemSlot(int slot, IKVItem item)
+		public IKVItemSlot(int slot, IKVItem item, IKVSlotType slotType)
 		{
 			this.slot = slot;
 			this.item = item;
+			this.slotType = slotType;
 		}
 
 		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
@@ -42,6 +49,7 @@ namespace pcapTest
 		}
 
 		private int slot;
+		private IKVSlotType slotType;
 		private IKVItem item;
 
 		public event PropertyChangedEventHandler PropertyChanged;

@@ -25,5 +25,27 @@ namespace pcapTest
 			IKVItemBag bag = (IKVItemBag)bagList.SelectedItem;
 			gameClient.openBag(bag);
 		}
+
+		private void grabSelectedItemBtn_Click(object sender, EventArgs e)
+		{
+			IKVItemBag bag = (IKVItemBag)bagList.SelectedItem;
+			if(bag == null)
+			{
+				MessageBox.Show("bag was null. couldnt grab items");
+				return;
+			}
+			IKVItem tmpItem = (IKVItem)itemList.SelectedItem;
+			gameClient.grabBagItem(bag, tmpItem, itemList.SelectedIndex);
+
+		}
+
+		private void IKVInventoryGUI_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (e.CloseReason == CloseReason.UserClosing)
+			{
+				this.Hide();
+				e.Cancel = true;
+			}
+		}
 	}
 }
