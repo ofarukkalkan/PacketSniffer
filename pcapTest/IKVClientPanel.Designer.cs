@@ -40,6 +40,7 @@
 			this.charSelectionDataListBox = new System.Windows.Forms.ListBox();
 			this.portListBox = new System.Windows.Forms.ListBox();
 			this.chatBox = new System.Windows.Forms.ListBox();
+			this.autoAcceptPartyChk = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// enterGameBtn
@@ -121,7 +122,8 @@
 			this.loginDataListBox.FormattingEnabled = true;
 			this.loginDataListBox.Items.AddRange(new object[] {
             resources.GetString("loginDataListBox.Items"),
-            resources.GetString("loginDataListBox.Items1")});
+            resources.GetString("loginDataListBox.Items1"),
+            resources.GetString("loginDataListBox.Items2")});
 			this.loginDataListBox.Location = new System.Drawing.Point(12, 114);
 			this.loginDataListBox.Name = "loginDataListBox";
 			this.loginDataListBox.Size = new System.Drawing.Size(291, 56);
@@ -131,8 +133,9 @@
 			// 
 			this.charSelectionDataListBox.FormattingEnabled = true;
 			this.charSelectionDataListBox.Items.AddRange(new object[] {
-            "gunter 863b2dbc",
-            "wayland c25c30c5"});
+            "ii 0a24c474",
+            "iii e1e60f72",
+            "iiii d316d145"});
 			this.charSelectionDataListBox.Location = new System.Drawing.Point(12, 251);
 			this.charSelectionDataListBox.Name = "charSelectionDataListBox";
 			this.charSelectionDataListBox.Size = new System.Drawing.Size(291, 82);
@@ -156,11 +159,22 @@
 			this.chatBox.Size = new System.Drawing.Size(291, 147);
 			this.chatBox.TabIndex = 54;
 			// 
+			// autoAcceptPartyChk
+			// 
+			this.autoAcceptPartyChk.AutoSize = true;
+			this.autoAcceptPartyChk.Location = new System.Drawing.Point(191, 85);
+			this.autoAcceptPartyChk.Name = "autoAcceptPartyChk";
+			this.autoAcceptPartyChk.Size = new System.Drawing.Size(112, 17);
+			this.autoAcceptPartyChk.TabIndex = 55;
+			this.autoAcceptPartyChk.Text = "Auto Accept Party";
+			this.autoAcceptPartyChk.UseVisualStyleBackColor = true;
+			// 
 			// IKVClientPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(315, 589);
+			this.Controls.Add(this.autoAcceptPartyChk);
 			this.Controls.Add(this.chatBox);
 			this.Controls.Add(this.portListBox);
 			this.Controls.Add(this.charSelectionDataListBox);
@@ -192,5 +206,6 @@
 		private System.Windows.Forms.ListBox charSelectionDataListBox;
 		private System.Windows.Forms.ListBox portListBox;
 		private System.Windows.Forms.ListBox chatBox;
+		public System.Windows.Forms.CheckBox autoAcceptPartyChk;
 	}
 }

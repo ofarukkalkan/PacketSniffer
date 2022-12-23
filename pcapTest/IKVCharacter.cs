@@ -27,7 +27,12 @@ namespace pcapTest
 			pos += 13;
 
 			IKVInventory newInv = IKVInventory.parse(gameClient, data, pos, end);
-			Action act = ()=> newInv.backPackGUI.MdiParent = gameClient.mdiParent;
+			Action act = () =>
+			{
+				newInv.backPackGUI.MdiParent = gameClient.mdiParent;
+				newInv.bankGUI.MdiParent = gameClient.mdiParent;
+
+			};
 			gameClient.mdiParent.Invoke(act);
 			newChar.inventory = newInv;
 

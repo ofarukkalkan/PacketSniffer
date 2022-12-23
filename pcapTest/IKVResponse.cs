@@ -52,8 +52,18 @@ namespace pcapTest
 		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
 		{
 			byte[] slotFromBytes = data.Skip(begin + 8).Take(4).ToArray();
-			int slot = BitConverter.ToInt32(slotFromBytes, 0);
-			gameClient.charLoggedIn.inventory.itemSlots[slot].Item = null;
+			byte[] slotToBytes = data.Skip(begin + 12).Take(4).ToArray();
+
+			int slotFrom = BitConverter.ToInt32(slotFromBytes, 0);
+			int slotTo = BitConverter.ToInt32(slotToBytes, 0);
+			Action act = () =>
+			{
+				IKVItem tmp = gameClient.charLoggedIn.inventory.itemSlots[slotFrom].Item;
+				gameClient.charLoggedIn.inventory.itemSlots[slotFrom].Item = null;
+				gameClient.charLoggedIn.inventory.itemSlots[slotTo].Item = tmp;
+			};
+			gameClient.charLoggedIn.inventory.backPackGUI.bagList.Invoke(act);
+
 			return true;
 		}
 	}
@@ -67,7 +77,7 @@ namespace pcapTest
 
 		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
 		{
-			IKVItemBag bag = IKVItemBag.parse(data, end);
+			IKVItemBag bag = IKVItemBag.parse(data, begin, end);
 			gameClient.charLoggedIn.inventory.bags.Add(bag);
 			Action act = () =>
 			{
@@ -103,20 +113,26 @@ namespace pcapTest
 			}
 
 			int tmpBegin = begin + 8;
-			for (; tmpBegin < end; tmpBegin += 36, slotCounter++)
+			for (; tmpBegin < 0x150; tmpBegin += 36, slotCounter++)
 			{
 				IKVItem item = IKVItem.parse(data, tmpBegin, tmpBegin + 36, slotCounter);
 				if (item.itemId != 0)
 				{
 					bagOpened?.items.Add(item);
-					Action action = () => gameClient.charLoggedIn.inventory.backPackGUI.itemList.Items.Add(item);
-					gameClient.charLoggedIn.inventory.backPackGUI.itemList.Invoke(action);
 				}
 
 			}
+			if(bagOpened != null)
+			{
+				Action action = () =>
+				{
+					gameClient.charLoggedIn.inventory.backPackGUI.itemList.Items.Clear();
+					gameClient.charLoggedIn.inventory.backPackGUI.itemList.Items.AddRange(bagOpened.items.ToArray());
+				};
+				gameClient.charLoggedIn.inventory.backPackGUI.itemList.Invoke(action);
 
-			gameClient.charLoggedIn.inventory.openedBag = bagOpened;
-
+				gameClient.charLoggedIn.inventory.openedBag = bagOpened;
+			}
 			return true;
 		}
 	}
@@ -174,6 +190,7 @@ namespace pcapTest
 			Action act = () =>
 			{
 				gameClient.chatBox.Items.Add(msg);
+				gameClient.chatBox.SelectedIndex = gameClient.chatBox.Items.Count - 1;
 			};
 			gameClient.chatBox.Invoke(act);
 			return true;
@@ -194,8 +211,33 @@ namespace pcapTest
 			Action act = () =>
 			{
 				gameClient.chatBox.Items.Add(msg);
+				gameClient.chatBox.SelectedIndex = gameClient.chatBox.Items.Count - 1;
 			};
 			gameClient.chatBox.Invoke(act);
+			return true;
+		}
+	}
+
+	class PartyRequestResponse : IKVResponse
+	{
+		public PartyRequestResponse(byte[] cmd) : base(cmd)
+		{
+		}
+
+		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
+		{
+			int requestFromID = BitConverter.ToInt32(data.Skip(begin + 4).Take(4).ToArray(), 0);
+			Action act = () =>
+			{
+
+				if (gameClient.autoAcceptPartyChk.Checked && requestFromID == gameClient.mainCharID)
+				{
+					byte[] cmd = gameClient.commands_map[IKVCommandStr.acceptParty].bytes;
+					gameClient.execCmd(IKVCommandStr._0x08, cmd.Concat(BitConverter.GetBytes(gameClient.mainCharID)).ToArray());
+				}
+			};
+			gameClient.autoAcceptPartyChk.Invoke(act);
+
 			return true;
 		}
 	}
@@ -246,6 +288,9 @@ namespace pcapTest
 
 					[nameof(DialogBubbleResponse)] = new DialogBubbleResponse(new byte[] {
 					0x6c, 0x6a, 0x6e, 0x69}),
+
+					[nameof(PartyRequestResponse)] = new PartyRequestResponse(new byte[] {
+					0x70, 0x66, 0x62, 0x69}),
 				};
 
 				return map;

@@ -35,6 +35,8 @@ namespace pcapTest
 		public static readonly string selectBag = "selectBag";
 		public static readonly string grabBag = "grabBag";
 		public static readonly string selectCharacter = "selectCharacter";
+		public static readonly string openBank = "openBank";
+
 
 	}
 	public class IKVCommand
@@ -95,6 +97,8 @@ namespace pcapTest
 			0x63, 0x64, 0x66, 0x63}, true),
 				[IKVCommandStr.acceptParty] = new IKVCommand(new byte[] {
 			0x63, 0x79, 0x6e, 0x69}, false),
+				[IKVCommandStr.openBank] = new IKVCommand(new byte[] {
+			0x6c, 0x76, 0x70, 0x6f}, true),
 				// login
 				[IKVCommandStr.selectCharacter] = new IKVCommand(new byte[] {
 			0x6c, 0x61, 0x73, 0x63}, false),

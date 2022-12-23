@@ -131,6 +131,24 @@ namespace pcapTest
       newPanel.Show();
 		}
 
+		private void toolStripButton7_Click(object sender, EventArgs e)
+		{
+      foreach (var client in clientPanels)
+      {
+        client.repeatChk.Checked = !client.repeatChk.Checked;
+
+			}
+		}
+
+		private void togglePartyBtn_Click(object sender, EventArgs e)
+		{
+			foreach (var client in clientPanels)
+			{
+				client.autoAcceptPartyChk.Checked = !client.autoAcceptPartyChk.Checked;
+
+			}
+		}
+
 		private void toolStripButton3_Click(object sender, EventArgs e)// prev
     {
       if (packetDetailsForm.listView1.SelectedItems.Count == 1)

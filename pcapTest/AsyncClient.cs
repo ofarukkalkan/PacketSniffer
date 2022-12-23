@@ -36,29 +36,29 @@ namespace pcapTest
 		ManualResetEvent sendDone = new ManualResetEvent(false);
 		ManualResetEvent receiveDone = new ManualResetEvent(false);
 
-		public IKVItemBag lastSelectedBag = null;
-		public int currentBagIndex = 0;
 
 		// The port number for the remote device.  
 		int port; // kuklaci 27206 // beyazkosk 27205
 
 		string ip_addess = "93.155.105.236";
 
-		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection, Form mdiParent, ListBox charListBox, ListBox chatBox)
+		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection, int mainCharID, Form mdiParent, ListBox charListBox, ListBox chatBox, CheckBox autoAcceptPartyChk)
 		{
 			this.loginData = loginData;
 			this.charSelection = charSelection;
 			this.port = port;
+			this.mainCharID = mainCharID;
 
 			this.mdiParent = mdiParent;
 			this.charListBox = charListBox;
+			this.autoAcceptPartyChk = autoAcceptPartyChk;
 			this.chatBox = chatBox;
 
 			commands_map = IKVCommand.getCommandMap();
 			response_map = IKVResponse.getResponseMap();
 
 			ipAddress = IPAddress.Parse(ip_addess);
-			remoteEP = new IPEndPoint(ipAddress, port);
+			remoteEP = new IPEndPoint(ipAddress, this.port);
 
 		}
 

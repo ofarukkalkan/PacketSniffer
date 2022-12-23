@@ -40,8 +40,8 @@ namespace pcapTest
 				int port = Int32.Parse(portListBox.SelectedItem.ToString().Split(' ')[1]);
 				byte[] loginBytes = Utils.ToByteArray(loginDataListBox.SelectedItem.ToString().Split(' ')[1]);
 				byte[] charSelectionBytes = Utils.ToByteArray(charSelectionDataListBox.SelectedItem.ToString().Split(' ')[1]);
-
-				client = new AsynchronousClient(port, loginBytes, charSelectionBytes, this.MdiParent, charsList, chatBox);
+				int _mainCharID = Int32.Parse(mainCharID);
+				client = new AsynchronousClient(port, loginBytes, charSelectionBytes, _mainCharID, this.MdiParent, charsList, chatBox, autoAcceptPartyChk);
 				Thread t1 = new Thread(new ThreadStart(client.start));
 				t1.Start();
 				startClientBtn.Enabled = false;

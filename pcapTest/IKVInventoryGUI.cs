@@ -28,7 +28,7 @@ namespace pcapTest
 				return;
 			}
 			IKVItem tmpItem = (IKVItem)itemList.SelectedItem;
-			gameClient.grabBagItem(bag, tmpItem, itemList.SelectedIndex);
+			gameClient.grabBagItem(bag, tmpItem);
 			grabSelectedItemBtn.Enabled = false;
 		}
 

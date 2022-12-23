@@ -23,9 +23,10 @@ namespace pcapTest
 		public List<IKVCharacter> chars = new List<IKVCharacter>();
 		public ListBox charListBox;
 		public ListBox chatBox;
+		public CheckBox autoAcceptPartyChk;
 		public Form mdiParent;
 		public IKVCharacter charLoggedIn;
-
+		public int mainCharID;
 		public void moveItem2Bank(int slot)
 		{
 
@@ -51,7 +52,7 @@ namespace pcapTest
 			execCmd(IKVCommandStr._0x08, cmd.Concat(bagId).ToArray());
 		}
 
-		public bool grabBagItem(IKVItemBag bag, IKVItem bagItem, int bagSlot)
+		public bool grabBagItem(IKVItemBag bag, IKVItem bagItem)
 		{
 			if (bagItem == null || bagItem.itemId == 0)
 			{
@@ -60,7 +61,7 @@ namespace pcapTest
 			}
 			
 			byte[] emptySlotBytes = BitConverter.GetBytes(charLoggedIn.inventory.getFirstBackPackEmptySlot());
-			byte[] bagSlotBytes = BitConverter.GetBytes(bagSlot);
+			byte[] bagSlotBytes = BitConverter.GetBytes(bagItem.slot);
 			byte[] cmd = commands_map[IKVCommandStr.grabBag].bytes;
 			byte[] bagId = BitConverter.GetBytes(bag.Id);
 			execCmd(IKVCommandStr._0x10, cmd.Concat(bagId).Concat(bagSlotBytes).Concat(emptySlotBytes).ToArray());

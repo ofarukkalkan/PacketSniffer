@@ -15,12 +15,12 @@ namespace pcapTest
 			this.items = new List<IKVItem>();
 		}
 
-		public static IKVItemBag parse(byte[] data, int bytesread)
+		public static IKVItemBag parse(byte[] data, int begin, int bytesread)
 		{
 			if (bytesread < 24)
 				return null;
 
-			int id = BitConverter.ToInt32(data.Skip(8).Take(4).ToArray(), 0);
+			int id = BitConverter.ToInt32(data.Skip(begin + 4).Take(4).ToArray(), 0);
 			byte[] x = data.Skip(12).Take(4).ToArray();
 			byte[] z = data.Skip(16).Take(4).ToArray();
 			byte[] y = data.Skip(20).Take(4).ToArray();

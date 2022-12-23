@@ -45,6 +45,8 @@
 			this.toolStripNewClientBtn = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripMainCharIDTxtBox = new System.Windows.Forms.ToolStripTextBox();
+			this.toggleRepeatsBtn = new System.Windows.Forms.ToolStripButton();
+			this.togglePartyBtn = new System.Windows.Forms.ToolStripButton();
 			this.menuStrip1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -97,7 +99,9 @@
             this.toolStripPacketDetailsBtn,
             this.toolStripNewClientBtn,
             this.toolStripSeparator1,
-            this.toolStripMainCharIDTxtBox});
+            this.toolStripMainCharIDTxtBox,
+            this.toggleRepeatsBtn,
+            this.togglePartyBtn});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 24);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(886, 27);
@@ -205,7 +209,25 @@
 			this.toolStripMainCharIDTxtBox.Font = new System.Drawing.Font("Segoe UI", 9F);
 			this.toolStripMainCharIDTxtBox.Name = "toolStripMainCharIDTxtBox";
 			this.toolStripMainCharIDTxtBox.Size = new System.Drawing.Size(100, 27);
-			this.toolStripMainCharIDTxtBox.Text = "775860";
+			this.toolStripMainCharIDTxtBox.Text = "776088";
+			// 
+			// toggleRepeatsBtn
+			// 
+			this.toggleRepeatsBtn.Image = ((System.Drawing.Image)(resources.GetObject("toggleRepeatsBtn.Image")));
+			this.toggleRepeatsBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toggleRepeatsBtn.Name = "toggleRepeatsBtn";
+			this.toggleRepeatsBtn.Size = new System.Drawing.Size(106, 24);
+			this.toggleRepeatsBtn.Text = "toggle repeats";
+			this.toggleRepeatsBtn.Click += new System.EventHandler(this.toolStripButton7_Click);
+			// 
+			// togglePartyBtn
+			// 
+			this.togglePartyBtn.Image = ((System.Drawing.Image)(resources.GetObject("togglePartyBtn.Image")));
+			this.togglePartyBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.togglePartyBtn.Name = "togglePartyBtn";
+			this.togglePartyBtn.Size = new System.Drawing.Size(95, 24);
+			this.togglePartyBtn.Text = "toggle party";
+			this.togglePartyBtn.Click += new System.EventHandler(this.togglePartyBtn_Click);
 			// 
 			// MainForm
 			// 
@@ -249,5 +271,7 @@
 		private System.Windows.Forms.ToolStripButton toolStripNewClientBtn;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripTextBox toolStripMainCharIDTxtBox;
+		private System.Windows.Forms.ToolStripButton toggleRepeatsBtn;
+		private System.Windows.Forms.ToolStripButton togglePartyBtn;
 	}
 }
