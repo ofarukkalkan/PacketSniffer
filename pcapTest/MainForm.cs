@@ -235,7 +235,7 @@ namespace pcapTest
 
 
         Action action = () => packetDetailsForm.listView1.Items.Add(item);
-				packetDetailsForm.Invoke(action);
+				packetDetailsForm?.Invoke(action);
 
         ++packetNumber;
       }

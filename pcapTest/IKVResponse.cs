@@ -23,12 +23,12 @@ namespace pcapTest
 			byte[] endToken = { 0xff, 0xff, 0xff, 0xff };
 
 			int tmpBegin = begin + 12;
-			
+
 			for (int i = 0; i < charCount; i++)
 			{
 
 				int pos = Utils.containsCommand(data, tmpBegin, end, endToken);
-				if(pos > 0)
+				if (pos > 0)
 				{
 					IKVCharacter newChar = IKVCharacter.parse(gameClient, data, tmpBegin, pos);
 					gameClient.chars.Add(newChar);
@@ -39,11 +39,25 @@ namespace pcapTest
 				tmpBegin = pos + 4;
 			}
 
-
-
 			return true;
 		}
 	}
+
+	class ItemMovedResponse : IKVResponse
+	{
+		public ItemMovedResponse(byte[] cmd) : base(cmd)
+		{
+		}
+
+		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
+		{
+			byte[] slotFromBytes = data.Skip(begin + 8).Take(4).ToArray();
+			int slot = BitConverter.ToInt32(slotFromBytes, 0);
+			gameClient.charLoggedIn.inventory.itemSlots[slot].Item = null;
+			return true;
+		}
+	}
+
 
 	class BagDroppedResponse : IKVResponse
 	{
@@ -57,10 +71,10 @@ namespace pcapTest
 			gameClient.charLoggedIn.inventory.bags.Add(bag);
 			Action act = () =>
 			{
-				gameClient.charLoggedIn.inventory.gui.bagList.Items.Clear();
-				gameClient.charLoggedIn.inventory.gui.bagList.Items.AddRange(gameClient.charLoggedIn.inventory.bags.ToArray());
+				gameClient.charLoggedIn.inventory.backPackGUI.bagList.Items.Clear();
+				gameClient.charLoggedIn.inventory.backPackGUI.bagList.Items.AddRange(gameClient.charLoggedIn.inventory.bags.ToArray());
 			};
-			gameClient.charLoggedIn.inventory.gui.bagList.Invoke(act);
+			gameClient.charLoggedIn.inventory.backPackGUI.bagList.Invoke(act);
 			return true;
 		}
 	}
@@ -73,11 +87,10 @@ namespace pcapTest
 
 		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
 		{
-			int tmpBegin = begin + 12;
 			int slotCounter = 0;
 			IKVItemBag bagOpened = null;
 
-			int openedBagId = BitConverter.ToInt32(data.Skip(8).Take(4).ToArray(), 0);
+			int openedBagId = BitConverter.ToInt32(data.Skip(begin + 4).Take(4).ToArray(), 0);
 
 			foreach (var bag in gameClient.charLoggedIn.inventory.bags)
 			{
@@ -89,15 +102,15 @@ namespace pcapTest
 				}
 			}
 
-
+			int tmpBegin = begin + 8;
 			for (; tmpBegin < end; tmpBegin += 36, slotCounter++)
 			{
 				IKVItem item = IKVItem.parse(data, tmpBegin, tmpBegin + 36, slotCounter);
 				if (item.itemId != 0)
 				{
 					bagOpened?.items.Add(item);
-					Action action = () => gameClient.charLoggedIn.inventory.gui.itemList.Items.Add(item);
-					gameClient.charLoggedIn.inventory.gui.itemList.Invoke(action);
+					Action action = () => gameClient.charLoggedIn.inventory.backPackGUI.itemList.Items.Add(item);
+					gameClient.charLoggedIn.inventory.backPackGUI.itemList.Invoke(action);
 				}
 
 			}
@@ -132,11 +145,11 @@ namespace pcapTest
 
 						Action action = () =>
 						{
-							gameClient.charLoggedIn.inventory.slots[invSlot].Item = item;
-							gameClient.charLoggedIn.inventory.gui.itemList.Items.Remove(item);
-							gameClient.charLoggedIn.inventory.gui.grabSelectedItemBtn.Enabled = true;
+							gameClient.charLoggedIn.inventory.itemSlots[invSlot].Item = item;
+							gameClient.charLoggedIn.inventory.backPackGUI.itemList.Items.Remove(item);
+							gameClient.charLoggedIn.inventory.backPackGUI.grabSelectedItemBtn.Enabled = true;
 						};
-						gameClient.charLoggedIn.inventory.gui.itemList.Invoke(action);
+						gameClient.charLoggedIn.inventory.backPackGUI.itemList.Invoke(action);
 						break;
 					}
 				}
@@ -157,6 +170,26 @@ namespace pcapTest
 		{
 			int count = BitConverter.ToInt32(data.Skip(begin + 12).Take(4).ToArray(), 0);
 			string msg = Encoding.UTF8.GetString(data, begin + 16, begin + 16 + count);
+
+			Action act = () =>
+			{
+				gameClient.chatBox.Items.Add(msg);
+			};
+			gameClient.chatBox.Invoke(act);
+			return true;
+		}
+	}
+
+	class DialogBubbleResponse : IKVResponse
+	{
+		public DialogBubbleResponse(byte[] cmd) : base(cmd)
+		{
+		}
+
+		public override bool process(IKVGame gameClient, byte[] data, int begin, int end)
+		{
+			int count = BitConverter.ToInt32(data.Skip(begin + 8).Take(4).ToArray(), 0);
+			string msg = Encoding.UTF8.GetString(data, begin + 12, begin + 12 + count);
 
 			Action act = () =>
 			{
@@ -196,6 +229,9 @@ namespace pcapTest
 					[nameof(CharsListedResponse)] = new CharsListedResponse(new byte[] {
 					0x66, 0x67, 0x6d, 0x69 }),
 
+					[nameof(ItemMovedResponse)] = new ItemMovedResponse(new byte[] {
+					0x6d, 0x6b, 0x63, 0x79 }),
+
 					[nameof(BagDroppedResponse)] = new BagDroppedResponse(new byte[] {
 					0x70, 0x73, 0x62, 0x61}),
 
@@ -208,6 +244,8 @@ namespace pcapTest
 					[nameof(SystemChatResponse)] = new SystemChatResponse(new byte[] {
 					0x63, 0x74, 0x65, 0x72}),
 
+					[nameof(DialogBubbleResponse)] = new DialogBubbleResponse(new byte[] {
+					0x6c, 0x6a, 0x6e, 0x69}),
 				};
 
 				return map;

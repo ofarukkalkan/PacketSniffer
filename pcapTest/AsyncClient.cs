@@ -44,12 +44,13 @@ namespace pcapTest
 
 		string ip_addess = "93.155.105.236";
 
-		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection,  ListBox charListBox, ListBox chatBox)
+		public AsynchronousClient(int port, byte[] loginData, byte[] charSelection, Form mdiParent, ListBox charListBox, ListBox chatBox)
 		{
 			this.loginData = loginData;
 			this.charSelection = charSelection;
 			this.port = port;
 
+			this.mdiParent = mdiParent;
 			this.charListBox = charListBox;
 			this.chatBox = chatBox;
 
@@ -271,11 +272,11 @@ namespace pcapTest
 #endif
 		}
 
-		public override void runCmdWithData(string cmd, byte[] datacmd)
+		public override void execCmd(string cmdLength, byte[] cmd)
 		{
-			Send(client, commands_map[cmd].bytes);
+			Send(client, commands_map[cmdLength].bytes);
 			sendDone.WaitOne();
-			Send(client, datacmd);
+			Send(client, cmd);
 		}
 
 		public override void enterGame(string charName)
@@ -287,9 +288,9 @@ namespace pcapTest
 				return;
 			}
 			///////////////// karakter sec
-			Send(client, commands_map["interactcmd___"].bytes);
+			Send(client, commands_map[IKVCommandStr._0x08].bytes);
 			sendDone.WaitOne();
-			byte[] selectiondata = commands_map["charselectdata"].bytes;
+			byte[] selectiondata = commands_map[IKVCommandStr.selectCharacter].bytes;
 			Send(client, selectiondata.Concat(charSelection).ToArray());
 			sendDone.WaitOne();
 			Console.WriteLine("Karakter secme istegi gonderildi ");
@@ -298,7 +299,7 @@ namespace pcapTest
 			Thread.Sleep(1000);
 
 			/////////////////  oyuna gir
-			Send(client, commands_map["spawncmd______"].bytes);
+			Send(client, commands_map[IKVCommandStr._0x04].bytes);
 			sendDone.WaitOne();
 			Send(client, new byte[] { 0x73, 0x69, 0x78, 0x74 });
 			sendDone.WaitOne();

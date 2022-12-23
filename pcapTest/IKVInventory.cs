@@ -11,27 +11,27 @@ namespace pcapTest
 		public IKVInventory(IKVGame gameClient)
 		{
 			this.bags = new List<IKVItemBag>();
-			this.slots = new List<IKVItemSlot>(36);
+			this.itemSlots = new Dictionary<int, IKVItemSlot>(36 + 128);
 			this.gameClient = gameClient;
-			this.gui = new IKVInventoryGUI(gameClient);
+			this.backPackGUI = new IKVBackPackGUI(gameClient);
+			this.bankGUI = new IKVBankGUI();
 			this.openedBag = null;
 
-			int slotCounter = 0;
+			int slotCounter = 1;
 			for (int i = 0; i < 9; i++)
 			{
 				for (int j = 0; j < 4; j++)
 				{
 					IKVSlotType slotType = IKVSlotType.hidden;
-					if (slotCounter > 13)
-						slotType = IKVSlotType.bag;
-					slots.Add(new IKVItemSlot(slotCounter, null, slotType));
-					TextBox box = new TextBox
+					if (slotCounter > 12)
+						slotType = IKVSlotType.backPack;
+					itemSlots[slotCounter] = new IKVItemSlot(slotCounter, null, slotType);
+					RadioButton box = new RadioButton
 					{
-						Size = new System.Drawing.Size(100, 40)
+						Size = new System.Drawing.Size(90, 30)
 					};
-					box.Location = new System.Drawing.Point(280 + (j * 5) + (j * box.Size.Width), 20 + (i * box.Height) + (i * 5));
-					box.Tag = BitConverter.ToString(BitConverter.GetBytes(slotCounter));
-					box.ReadOnly = true;
+					box.Location = new System.Drawing.Point(10 + (j * 5) + (j * box.Size.Width), 10 + (i * box.Height) + (i * 5));
+					box.Tag = itemSlots[slotCounter];
 
 					switch (slotCounter)
 					{
@@ -41,38 +41,39 @@ namespace pcapTest
 							box.BackColor = Color.Tomato;
 							break;
 						case 9:
-						case 10:
+						case 0x0a:
 							box.BackColor = Color.Wheat;
 							break;
 						case 3:
 							box.BackColor = Color.Olive;
 							break;
-						case 11:
+						case 0x0b:
 							box.BackColor = Color.Cyan;
 							break;
-						case 12:
+						case 0x0c:
 							box.BackColor = Color.Silver;
 							break;
-						case 13:
+						case 0x0d:
 							box.BackColor = Color.Crimson;
 							break;
-						case 14:
+						case 0x0e:
 							box.BackColor = Color.Crimson;
 							break;
-						case 15:
+						case 0x0f:
 							box.BackColor = Color.RoyalBlue;
 							break;
-						case 16:
+						case 0x10:
 							box.BackColor = Color.RoyalBlue;
 							break;
 
 						default:
+							box.BackColor = Color.LightGray;
 							break;
 					}
 
-					Binding binding = new Binding("Text", slots[slotCounter], "Item", false, DataSourceUpdateMode.OnPropertyChanged);
+					Binding binding = new Binding("Text", itemSlots[slotCounter], "Item", false, DataSourceUpdateMode.OnPropertyChanged);
 					box.DataBindings.Add(binding);
-					gui.Controls.Add(box);
+					backPackGUI.itemSlotsGroup.Controls.Add(box);
 
 					slotCounter++;
 				}
@@ -80,6 +81,27 @@ namespace pcapTest
 			}
 
 
+			for (int i = 0; i < 16; i++)
+			{
+				for (int j = 0; j < 8; j++)
+				{
+					IKVSlotType slotType = IKVSlotType.bank;
+					itemSlots[slotCounter] = new IKVItemSlot(slotCounter, null, slotType);
+
+					RadioButton box = new RadioButton
+					{
+						Size = new System.Drawing.Size(90, 30)
+					};
+					box.Location = new System.Drawing.Point(10 + (j * 5) + (j * box.Size.Width), 10 + (i * box.Height) + (i * 5));
+					box.Tag = itemSlots[slotCounter];
+					box.BackColor = Color.PaleGoldenrod;
+
+					Binding binding = new Binding("Text", itemSlots[slotCounter], "Item", false, DataSourceUpdateMode.OnPropertyChanged);
+					box.DataBindings.Add(binding);
+					bankGUI.itemsGroup.Controls.Add(box);
+					slotCounter++;
+				}
+			}
 
 		}
 		public static IKVInventory parse(IKVGame gameClient, byte[] data, int begin, int end)
@@ -92,28 +114,40 @@ namespace pcapTest
 			{
 
 				IKVItem newItem = IKVItem.parse(data, tmpBegin, tmpBegin + 40);
-				newInv.slots[newItem.slot].Item = newItem;
+				newInv.itemSlots[newItem.slot].Item = newItem;
 
 			}
 			
 			return newInv;
 		}
 
-		public int getFirstEmptySlot()
+		public int getFirstBackPackEmptySlot()
 		{
 			for (int i = 0x0d; i <= 0x24; i++)
 			{
-				if (slots[i].Item == null)
+				if (itemSlots[i].Item == null)
 					return i;
 			}
 			return -1;
 		}
 
+		public int getFirsBankEmptySlot()
+		{
+			for (int i = 0x25; i <= 0xa4; i++)
+			{
+				if (itemSlots[i].Item == null)
+					return i;
+			}
+			return -1;
+		}
+
+
 		public IKVGame gameClient;
-		public List<IKVItemSlot> slots;
+		public Dictionary<int, IKVItemSlot> itemSlots;
 		public List<IKVItemBag> bags;
 		public IKVItemBag openedBag;
-		public IKVInventoryGUI gui;
+		public IKVBackPackGUI backPackGUI;
+		public IKVBankGUI bankGUI;
 
 	}
 }

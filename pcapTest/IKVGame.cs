@@ -23,12 +23,20 @@ namespace pcapTest
 		public List<IKVCharacter> chars = new List<IKVCharacter>();
 		public ListBox charListBox;
 		public ListBox chatBox;
+		public Form mdiParent;
 		public IKVCharacter charLoggedIn;
 
-		public void gotoBag(IKVItemBag bag)
+		public void moveItem2Bank(int slot)
 		{
-			IKVMoveCommand datacmd = IKVMoveCommand.prepMoveData(commands_map["movedata_______"], bag.pos);
-			runCmdWithData("movecmd________", datacmd.bytes);
+
+			if (slot >= 0x0d && slot <= 0x24)
+			{
+				byte[] emptyBankSlotBytes = BitConverter.GetBytes(charLoggedIn.inventory.getFirsBankEmptySlot());
+				byte[] itemIDBytes = BitConverter.GetBytes(charLoggedIn.inventory.itemSlots[slot].Item.itemId);
+
+				byte[] cmd = commands_map[IKVCommandStr.moveItem].bytes;
+				execCmd(IKVCommandStr._0x10, cmd.Concat(charSelection).Concat(itemIDBytes).Concat(emptyBankSlotBytes).ToArray());
+			}
 		}
 
 		public void openBag(IKVItemBag bag)
@@ -38,9 +46,9 @@ namespace pcapTest
 				MessageBox.Show("bag not selected");
 				return;
 			}
-			byte[] datacmd = commands_map["selectbagcmd__"].bytes;
+			byte[] cmd = commands_map[IKVCommandStr.selectBag].bytes;
 			byte[] bagId = BitConverter.GetBytes(bag.Id);
-			runCmdWithData("interactcmd___", datacmd.Concat(bagId).ToArray());
+			execCmd(IKVCommandStr._0x08, cmd.Concat(bagId).ToArray());
 		}
 
 		public bool grabBagItem(IKVItemBag bag, IKVItem bagItem, int bagSlot)
@@ -51,11 +59,11 @@ namespace pcapTest
 				return false;
 			}
 			
-			byte[] emptySlotBytes = BitConverter.GetBytes(charLoggedIn.inventory.getFirstEmptySlot());
+			byte[] emptySlotBytes = BitConverter.GetBytes(charLoggedIn.inventory.getFirstBackPackEmptySlot());
 			byte[] bagSlotBytes = BitConverter.GetBytes(bagSlot);
-			byte[] datacmd = commands_map["itemgrabdata__"].bytes;
+			byte[] cmd = commands_map[IKVCommandStr.grabBag].bytes;
 			byte[] bagId = BitConverter.GetBytes(bag.Id);
-			runCmdWithData("itemcmd_______", datacmd.Concat(bagId).Concat(bagSlotBytes).Concat(emptySlotBytes).ToArray());
+			execCmd(IKVCommandStr._0x10, cmd.Concat(bagId).Concat(bagSlotBytes).Concat(emptySlotBytes).ToArray());
 
 			return true;
 		}
@@ -65,7 +73,7 @@ namespace pcapTest
 
 		}
 
-		public virtual void runCmdWithData(string cmd, byte[] datacmd)
+		public virtual void execCmd(string cmdLength, byte[] cmd)
 		{
 
 		}

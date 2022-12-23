@@ -12,7 +12,8 @@ namespace pcapTest
 	{
 		hidden,
 		equipment,
-		bag
+		backPack,
+		bank
 	}
 	public class IKVItemSlot : INotifyPropertyChanged
 	{

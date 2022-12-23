@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace pcapTest
 {
-	public partial class IKVInventoryGUI : Form
+	public partial class IKVBackPackGUI : Form
 	{
 		IKVGame gameClient;
-		public IKVInventoryGUI(IKVGame gameClient)
+		public IKVBackPackGUI(IKVGame gameClient)
 		{
 			InitializeComponent();
 			this.gameClient = gameClient;
@@ -36,7 +29,7 @@ namespace pcapTest
 			}
 			IKVItem tmpItem = (IKVItem)itemList.SelectedItem;
 			gameClient.grabBagItem(bag, tmpItem, itemList.SelectedIndex);
-
+			grabSelectedItemBtn.Enabled = false;
 		}
 
 		private void IKVInventoryGUI_FormClosing(object sender, FormClosingEventArgs e)
@@ -46,6 +39,25 @@ namespace pcapTest
 				this.Hide();
 				e.Cancel = true;
 			}
+		}
+
+		private void move2BankBtn_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < itemSlotsGroup.Controls.Count; i++)
+			{
+				var radio = ((RadioButton)itemSlotsGroup.Controls[i]);
+				if (radio.Checked == true)
+				{
+					gameClient.moveItem2Bank(((IKVItemSlot)radio.Tag).Slot);
+					break;
+				}
+			}
+
+		}
+
+		private void openBankBtn_Click(object sender, EventArgs e)
+		{
+			gameClient.charLoggedIn.inventory.bankGUI.Show();
 		}
 	}
 }

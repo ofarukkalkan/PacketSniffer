@@ -31,7 +31,7 @@ namespace pcapTest
 			if (bagSlot != -1)
 			{
 				newItem.slot = bagSlot;
-				newItem.itemId = BitConverter.ToInt32(newItem.data[0], 0);
+				newItem.itemId = BitConverter.ToInt32(newItem.data[1], 0);
 			}
 			else
 			{

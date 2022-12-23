@@ -41,7 +41,7 @@ namespace pcapTest
 				byte[] loginBytes = Utils.ToByteArray(loginDataListBox.SelectedItem.ToString().Split(' ')[1]);
 				byte[] charSelectionBytes = Utils.ToByteArray(charSelectionDataListBox.SelectedItem.ToString().Split(' ')[1]);
 
-				client = new AsynchronousClient(port, loginBytes, charSelectionBytes, charsList, chatBox);
+				client = new AsynchronousClient(port, loginBytes, charSelectionBytes, this.MdiParent, charsList, chatBox);
 				Thread t1 = new Thread(new ThreadStart(client.start));
 				t1.Start();
 				startClientBtn.Enabled = false;
@@ -94,12 +94,12 @@ namespace pcapTest
 
 			var id_data = BitConverter.GetBytes(int.Parse(mainCharID));
 
-			client.runCmdWithData("interactcmd___", data.Concat(id_data).ToArray());
+			client.execCmd(IKVCommandStr._0x08, data.Concat(id_data).ToArray());
 		}
 
 		private void openInventoryBtn_Click(object sender, EventArgs e)
 		{
-			client.charLoggedIn.inventory.gui.Show();
+			client.charLoggedIn.inventory.backPackGUI.Show();
 		}
 	}
 }
