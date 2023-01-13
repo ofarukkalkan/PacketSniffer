@@ -57,6 +57,7 @@ namespace pcapTest
 
 		private void openBankBtn_Click(object sender, EventArgs e)
 		{
+			gameClient.charLoggedIn.inventory.bankGUI.Text = this.Text;
 			gameClient.charLoggedIn.inventory.bankGUI.Show();
 		}
 	}

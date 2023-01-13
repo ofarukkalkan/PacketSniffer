@@ -123,7 +123,8 @@
 			this.loginDataListBox.Items.AddRange(new object[] {
             resources.GetString("loginDataListBox.Items"),
             resources.GetString("loginDataListBox.Items1"),
-            resources.GetString("loginDataListBox.Items2")});
+            resources.GetString("loginDataListBox.Items2"),
+            resources.GetString("loginDataListBox.Items3")});
 			this.loginDataListBox.Location = new System.Drawing.Point(12, 114);
 			this.loginDataListBox.Name = "loginDataListBox";
 			this.loginDataListBox.Size = new System.Drawing.Size(291, 56);
@@ -133,9 +134,10 @@
 			// 
 			this.charSelectionDataListBox.FormattingEnabled = true;
 			this.charSelectionDataListBox.Items.AddRange(new object[] {
-            "ii 0a24c474",
-            "iii e1e60f72",
-            "iiii d316d145"});
+            "Nazar b50f1049",
+            "Burcin 3beca591",
+            "Sermin a71aa0d6",
+            "Egemen 4ec8ce1f"});
 			this.charSelectionDataListBox.Location = new System.Drawing.Point(12, 251);
 			this.charSelectionDataListBox.Name = "charSelectionDataListBox";
 			this.charSelectionDataListBox.Size = new System.Drawing.Size(291, 82);

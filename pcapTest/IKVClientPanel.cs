@@ -54,6 +54,8 @@ namespace pcapTest
 				chatBox.Enabled = true;
 				repeatChk.Enabled = true;
 				charsList.Enabled = true;
+
+				this.Text = loginDataListBox.SelectedItem.ToString().Split(' ')[0];
 			}
 			else
 			{
@@ -99,6 +101,7 @@ namespace pcapTest
 
 		private void openInventoryBtn_Click(object sender, EventArgs e)
 		{
+			client.charLoggedIn.inventory.backPackGUI.Text = loginDataListBox.SelectedItem.ToString().Split(' ')[0];
 			client.charLoggedIn.inventory.backPackGUI.Show();
 		}
 	}

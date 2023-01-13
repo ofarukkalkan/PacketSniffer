@@ -209,7 +209,7 @@
 			this.toolStripMainCharIDTxtBox.Font = new System.Drawing.Font("Segoe UI", 9F);
 			this.toolStripMainCharIDTxtBox.Name = "toolStripMainCharIDTxtBox";
 			this.toolStripMainCharIDTxtBox.Size = new System.Drawing.Size(100, 27);
-			this.toolStripMainCharIDTxtBox.Text = "776088";
+			this.toolStripMainCharIDTxtBox.Text = "776491";
 			// 
 			// toggleRepeatsBtn
 			// 
